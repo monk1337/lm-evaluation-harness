@@ -693,9 +693,10 @@ class HFLM(LM):
         """
         # TODO: handle repeats > 1 case?
         # TODO: raise an error if system prompt not compatible with template
+        # NB: for Mixtral experiments strip the continuation to match expected prompt formatting
         new_reqs = []
         for req in requests:
-            context, continuation = req.args[0].strip(), req.args[1]
+            context, continuation = req.args[0].strip(), req.args[1].strip()
             """
             # arc experiment with interspersed special tokens
             import re
@@ -734,7 +735,10 @@ class HFLM(LM):
                 chat += [{"role": "system", "content": self.system_prompt}]
             for i in range(len(questions)):
                 chat.append({"role": "user", "content": questions[i]})
-                chat.append({"role": "assistant", "content": answers[i]})
+                try:
+                    chat.append({"role": "assistant", "content": answers[i]})
+                except:
+                    pass
             context = self.tokenizer.apply_chat_template(
                 chat, 
                 tokenize=False,
