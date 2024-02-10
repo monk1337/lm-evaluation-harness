@@ -726,9 +726,9 @@ class HFLM(LM):
                 turn = re.split('\nAnswer: ', message)
                 for i in turn:
                     if "Question: " not in i:
-                        answers.append(str("Answer: " + i).strip(), "\n")
+                        answers.append(str("Answer: " + i).strip())
                     else:
-                        questions.append(i.strip(), "\n")
+                        questions.append(i.strip())
             chat = []
             if self.system_prompt is not None:
                 chat += [{"role": "system", "content": self.system_prompt}]
