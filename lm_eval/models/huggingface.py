@@ -717,6 +717,30 @@ class HFLM(LM):
                 add_generation_prompt=True,
             )
 
+            # gsm8k experiment with interspersed special tokens
+            import re
+            elements = re.split('\n\n', context)
+            answers = []
+            questions = []
+            for message in elements:
+                turn = re.split('\nAnswer: ', message)
+                for i in turn:
+                    if "Question: " not in i:
+                        answers.append(str("Answer: " + i).strip(), "\n")
+                    else:
+                        questions.append(i.strip(), "\n")
+            chat = []
+            if self.system_prompt is not None:
+                chat += [{"role": "system", "content": self.system_prompt}]
+            for i in range(len(questions)):
+                chat.append({"role": "user", "content": questions[i]})
+                chat.append({"role": "assistant", "content": answers[i]})
+            context = self.tokenizer.apply_chat_template(
+                chat, 
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+
             """
             # no interspersed special tokens
             chat = []
@@ -737,6 +761,7 @@ class HFLM(LM):
 
             req.args = (context, continuation)
             new_reqs.append(req)
+
         return new_reqs
 
     def _model_call(self, inps, attn_mask=None, labels=None):
