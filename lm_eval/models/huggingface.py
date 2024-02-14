@@ -709,9 +709,9 @@ class HFLM(LM):
                 chat += [{"role": "system", "content": self.system_prompt}]
             for i in range(len(new_elements)):
                 if i % 2 == 0:
-                    chat.append({"role": "user", "content": f"Question: {new_elements[i]} Answer:"})
+                    chat += [{"role": "user", "content": f"Question: {new_elements[i]} Answer:"}]
                 else:
-                    chat.append({"role": "assistant", "content": f"{new_elements[i]}"})
+                    chat += [{"role": "assistant", "content": f"{new_elements[i]}"}]
             context = self.tokenizer.apply_chat_template(
                 chat, 
                 tokenize=False,
@@ -734,9 +734,9 @@ class HFLM(LM):
             if self.system_prompt is not None:
                 chat += [{"role": "system", "content": self.system_prompt}]
             for i in range(len(questions)):
-                chat.append({"role": "user", "content": questions[i]})
+                chat += [{"role": "user", "content": questions[i]}]
                 try:
-                    chat.append({"role": "assistant", "content": answers[i]})
+                    chat += [{"role": "assistant", "content": answers[i]}]
                 except:
                     pass
             context = self.tokenizer.apply_chat_template(
