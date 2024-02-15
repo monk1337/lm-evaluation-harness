@@ -693,10 +693,9 @@ class HFLM(LM):
         """
         # TODO: handle repeats > 1 case?
         # TODO: raise an error if system prompt not compatible with template
-        # NB: for Mixtral experiments strip the continuation to match expected prompt formatting
         new_reqs = []
         for req in requests:
-            context, continuation = req.args[0].strip(), req.args[1].strip()
+            context, continuation = req.args[0].strip(), req.args[1]
             """
             # arc experiment with interspersed special tokens
             import re
