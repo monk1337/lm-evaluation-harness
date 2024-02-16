@@ -696,56 +696,6 @@ class HFLM(LM):
         new_reqs = []
         for req in requests:
             context, continuation = req.args[0].strip(), req.args[1]
-            """
-            # arc experiment with interspersed special tokens
-            import re
-            elements = re.split('Answer:|Question:', context.replace('\n', ' '))
-            new_elements = []
-            for element in elements[1:-1]:
-                new_elements.append(element.strip())
-            chat = []
-            if self.system_prompt is not None:
-                chat += [{"role": "system", "content": self.system_prompt}]
-            for i in range(len(new_elements)):
-                if i % 2 == 0:
-                    chat += [{"role": "user", "content": f"Question: {new_elements[i]} Answer:"}]
-                else:
-                    chat += [{"role": "assistant", "content": f"{new_elements[i]}"}]
-            context = self.tokenizer.apply_chat_template(
-                chat, 
-                tokenize=False,
-                add_generation_prompt=True,
-            )
-
-            # gsm8k experiment with interspersed special tokens
-            import re
-            elements = re.split('\n\n', context)
-            answers = []
-            questions = []
-            for message in elements:
-                turn = re.split('\nAnswer: ', message)
-                for i in turn:
-                    if "Question: " not in i:
-                        answers.append(str("Answer: " + i).strip())
-                    else:
-                        questions.append(i.strip())
-            chat = []
-            if self.system_prompt is not None:
-                chat += [{"role": "system", "content": self.system_prompt}]
-            for i in range(len(questions)):
-                chat += [{"role": "user", "content": questions[i]}]
-                try:
-                    chat += [{"role": "assistant", "content": answers[i]}]
-                except:
-                    pass
-            context = self.tokenizer.apply_chat_template(
-                chat, 
-                tokenize=False,
-                add_generation_prompt=True,
-            )
-
-            """
-            # no interspersed special tokens
             chat = []
             if self.system_prompt is not None:
                 chat += [{"role": "system", "content": self.system_prompt}]
@@ -761,10 +711,8 @@ class HFLM(LM):
                 tokenize=False,
                 add_generation_prompt=True,
             )
-
             req.args = (context, continuation)
             new_reqs.append(req)
-
         return new_reqs
 
     def _model_call(self, inps, attn_mask=None, labels=None):
