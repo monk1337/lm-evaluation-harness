@@ -721,9 +721,8 @@ class HFLM(LM):
                         answers.append(element[1])
                         questions.append(str(element[2:]).strip())
                 chat = []
-                system_prompt = "You are a helpful assistant"
-                if system_prompt is not None:
-                  chat += [{"role": "system", "content": system_prompt}]
+                if self.system_prompt is not None:
+                  chat += [{"role": "system", "content": self.system_prompt}]
                 
                 for itr, question in enumerate(questions):
                     chat += [
