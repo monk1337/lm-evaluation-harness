@@ -710,21 +710,16 @@ class HFLM(LM):
 
             # mmlu
             try:
-                test = context.split("\n\n")
-                questions_and_answers = []
-                
-                questions_and_answers.append(f"{test[0]} {test[1]}")
-                for element in test[2:]:
-                    questions_and_answers.append(element)
-                
+                test = context.split("Answer:")
+                assert len(test) == 7
                 questions = []
                 answers = []
-                len(questions_and_answers)
-                for itr, element in enumerate(questions_and_answers):
-                    questions.append(element.split("\nAnswer:")[0].strip() + "\nAnswer:")
-                    if itr != len(questions_and_answers)-1:
-                        answers.append(element.split("\nAnswer:")[1].strip())
-                
+                for itr, element in enumerate(test[:len(test)-1]):
+                    if itr == 0:
+                        questions.append(str(element + "Answer:").strip()) 
+                    else:
+                        answers.append(element[1])
+                        questions.append(str(element[2:] + "Answer:").strip())
                 chat = []
                 system_prompt = "You are a helpful assistant"
                 if system_prompt is not None:
@@ -739,8 +734,7 @@ class HFLM(LM):
                             {"role": "assistant", "content": answers[itr]},
                         ]            
             except:
-                pass
-                # print("FAILURE:", context)
+                print("FAILURE")
             # TODO: expose settings for chat formatting:
             # - whether some "trigger" / start of assistant response might be placed in assistant's generation for it
             # - if few-shot, should the fewshots be placed in separate convo turns? provided in user's single turn?...
