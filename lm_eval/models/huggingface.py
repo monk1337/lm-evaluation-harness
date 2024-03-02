@@ -695,7 +695,10 @@ class HFLM(LM):
         # TODO: raise an error if system prompt not compatible with template
         new_reqs = []
         for req in requests:
-            context, continuation = req.args[0].strip(), req.args[1]
+            context, continuation = req.args[0].strip(), req.args[1].strip()
+
+            # regular zero-shot behavior
+            """
             chat = []
             if self.system_prompt is not None:
                 chat += [{"role": "system", "content": self.system_prompt}]
@@ -703,6 +706,38 @@ class HFLM(LM):
             chat += [
                 {"role": "user", "content": context},
             ]
+            """
+
+            # mmlu
+            test = context.split("\n\n")
+            questions_and_answers = []
+            
+            questions_and_answers.append(f"{test[0]} {test[1]}")
+            for element in test[2:]:
+                questions_and_answers.append(element)
+            
+            questions = []
+            answers = []
+            len(questions_and_answers)
+            for itr, element in enumerate(questions_and_answers):
+                questions.append(element.split("\nAnswer:")[0].strip() + "\nAnswer:")
+                if itr != len(questions_and_answers)-1:
+                    answers.append(element.split("\nAnswer:")[1].strip())
+            
+            chat = []
+            system_prompt = "You are a helpful assistant"
+            if system_prompt is not None:
+              chat += [{"role": "system", "content": system_prompt}]
+            
+            for itr, question in enumerate(questions):
+                chat += [
+                    {"role": "user", "content": question},
+                ]
+                if itr != len(questions)-1:
+                    chat += [
+                        {"role": "assistant", "content": answers[itr]},
+                    ]            
+
             # TODO: expose settings for chat formatting:
             # - whether some "trigger" / start of assistant response might be placed in assistant's generation for it
             # - if few-shot, should the fewshots be placed in separate convo turns? provided in user's single turn?...
