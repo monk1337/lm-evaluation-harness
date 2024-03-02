@@ -716,10 +716,10 @@ class HFLM(LM):
                 answers = []
                 for itr, element in enumerate(test[:len(test)-1]):
                     if itr == 0:
-                        questions.append(str(element + "Answer:").strip()) 
+                        questions.append(str(element).strip()) 
                     else:
                         answers.append(element[1])
-                        questions.append(str(element[2:] + "Answer:").strip())
+                        questions.append(str(element[2:]).strip())
                 chat = []
                 system_prompt = "You are a helpful assistant"
                 if system_prompt is not None:
