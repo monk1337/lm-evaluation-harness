@@ -495,12 +495,20 @@ class HFLM(LM):
                         model_kwargs["bnb_4bit_compute_dtype"] = utils.get_dtype(
                             model_kwargs["bnb_4bit_compute_dtype"]
                         )
+            bnb_config = transformers.BitsAndBytesConfig(
+                load_in_4bit=True,
+                bnb_4bit_quant_type="nf4",
+                bnb_4bit_compute_dtype=torch.bfloat16,
+            )
             self._model = self.AUTO_MODEL_CLASS.from_pretrained(
                 pretrained,
                 revision=revision,
-                torch_dtype=utils.get_dtype(dtype),
+                #torch_dtype=utils.get_dtype(dtype),
                 trust_remote_code=trust_remote_code,
-                **model_kwargs,
+                quantization_config=bnb_config,
+                torch_dtype=torch.bfloat16,
+                device_map="auto",
+                #**model_kwargs,
             )
         else:
             try:
