@@ -507,7 +507,7 @@ class HFLM(LM):
                 trust_remote_code=trust_remote_code,
                 #quantization_config=bnb_config,
                 #torch_dtype=torch.bfloat16,
-                device_map="auto",
+                #device_map="auto",
                 **model_kwargs,
             )
         else:
