@@ -503,12 +503,12 @@ class HFLM(LM):
             self._model = self.AUTO_MODEL_CLASS.from_pretrained(
                 pretrained,
                 revision=revision,
-                #torch_dtype=utils.get_dtype(dtype),
+                torch_dtype=utils.get_dtype(dtype),
                 trust_remote_code=trust_remote_code,
-                quantization_config=bnb_config,
-                torch_dtype=torch.bfloat16,
+                #quantization_config=bnb_config,
+                #torch_dtype=torch.bfloat16,
                 device_map="auto",
-                #**model_kwargs,
+                **model_kwargs,
             )
         else:
             try:
