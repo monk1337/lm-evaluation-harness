@@ -506,7 +506,7 @@ class HFLM(LM):
                 torch_dtype=utils.get_dtype(dtype),
                 trust_remote_code=trust_remote_code,
                 quantization_config=bnb_config,
-                device_map="auto",
+                device_map="cuda",
                 #**model_kwargs,
             )
         else:
