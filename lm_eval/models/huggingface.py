@@ -505,10 +505,9 @@ class HFLM(LM):
                 revision=revision,
                 torch_dtype=utils.get_dtype(dtype),
                 trust_remote_code=trust_remote_code,
-                #quantization_config=bnb_config,
-                #torch_dtype=torch.bfloat16,
-                #device_map="auto",
-                **model_kwargs,
+                quantization_config=bnb_config,
+                device_map="auto",
+                #**model_kwargs,
             )
         else:
             try:
